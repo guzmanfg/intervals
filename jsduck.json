@@ -1,0 +1,8 @@
+{
+    "--title": "Librería IntervalJs",
+    "--guides": "guides.json",
+    "--encoding": "bom|utf-8",
+    "--output": "docs",
+    "--warnings": ["-nodoc", "-link", "-type_name"],
+    "--": ["src"]
+}

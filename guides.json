@@ -1,0 +1,12 @@
+[
+    {
+        "title": "IntervalsJs guides",
+        "items": [
+            {
+                "name": "endpoints",
+                "title": "Endpoint object",
+                "description": "A guide to build endpoints for intervals."
+            }
+        ]
+    }
+]

@@ -1,0 +1,33 @@
+{
+    "name": "interval",
+    "version": "1.0.0",
+    "description": "Microlibrary to work with intervals.",
+    "main": "src/interval.js",
+    "directories": {
+        "doc": "docs",
+        "test": "test"
+    },
+    "devDependencies": {
+        "mocha": "2.3.x",
+        "chai": "3.4.x"
+    },
+    "scripts": {
+        "test": "mocha -w"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/guzmanfg/intervals.git"
+    },
+    "keywords": [
+        "interval",
+        "math",
+        "range",
+        "endpoint"
+    ],
+    "author": "Guzmán Fernández García",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/guzmanfg/intervals/issues"
+    },
+    "homepage": "https://github.com/guzmanfg/intervals#readme"
+}

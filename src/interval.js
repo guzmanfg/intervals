@@ -1,21 +1,46 @@
 // TODO: decimal comma (semicolon as separator)
-// TODO: from string
+// TODO: scientific notation (e.g. 1e-17)
+/*global define, exports*/
+(function (root, factory) {
+    'use strict';
 
-(function (global) {
+    if (typeof define === 'function' && define.amd) {
+        // AMD
+        define([], factory);
+    } else if (typeof exports === 'object' && exports) {
+        // CommonJs 
+        root.module.exports = factory(root);
+    } else {
+        // Browser global
+        root.Interval = factory(root);
+    }
+
+}(this, function (root) {
     'use strict';
 
     var infinity = '∞',
         emptySet = '∅',
-        prev = global.Interval;
+        prev = root && root.Interval,
+        regex;
 
+    // Helpers
     /**
-     * Check if a value is an integer number.
-     * @private
-     * @param   {Object}  n Parameter to be tested.
-     * @returns {Boolean} true if parameter is an integer number, false in other case.
+     * Gets number value of string.
+     * @param {String} str String representing a numeric value.
      */
-    function isInt(n) {
-        return Number(n) === n && n % 1 === 0;
+    function getNumber(str) {
+        if (typeof str === 'undefined') {
+            return;
+        }
+        if (!isNaN(str)) {
+            return Number(str);
+        }
+        if (str.toUpperCase() === 'INF' || str === '∞') {
+            return Number.POSITIVE_INFINITY;
+        }
+        if (str.toUpperCase() === '-INF' || str === '-∞') {
+            return Number.NEGATIVE_INFINITY;
+        }
     }
 
     /**
@@ -29,6 +54,16 @@
     }
 
     /**
+     * Check if a value is an integer number.
+     * @private
+     * @param   {Object}  n Parameter to be tested.
+     * @returns {Boolean} true if parameter is an integer number, false in other case.
+     */
+    function isInt(n) {
+        return Number(n) === n && n % 1 === 0;
+    }
+
+    /**
      * Checks if a value is infinite.
      * @private
      * @param   {Object}  n Parameter to be tested.
@@ -38,6 +73,39 @@
         return Number(n) === n && !isFinite(n);
     }
 
+    function isNumber(n) {
+        return !isNaN(n);
+    }
+
+    /** 
+     * Combines several regular expressions into a single one
+     * @param {Array} regs Regular expressions
+     * @param {Strng} options (optional) RegExp flags
+     */
+    function multilineRegExp(regs, options) {
+        return new RegExp(regs.map(
+            function (reg) {
+                return reg.source;
+            }
+        ).join(''), options);
+    }
+
+    // ^\s*(\(|\]|\[|\{)?\s*([+\-]?(\d+(\.\d+)?|inf(inity)?|\u221E)|\u2205)?\s*(,|(\.\.))?\s*([+\-]?(\d+(\.\d+)?|inf(inity)?|\u221E))?\s*(\)|\[|\]|\})?\s*$
+    regex = multilineRegExp([
+        /^\s*/,
+        /(\(|\]|\[|\{)?/, // Group 1 - Opening bracket 
+        /\s*/,
+        /([+\-]?(\d+(\.\d+)?|inf(inity)?|\u221E)|\u2205)?/, // Group 2 - First term: Number, infinity or empty set (∅)
+        /\s*/,
+        /(,|(\.\.))?/, // Group 6 - Separator (, or ..)
+        /\s*/,
+        /([+\-]?(\d+(\.\d+)?|inf(inity)?|\u221E))?/, // Group 8 - Second term: Number or infinity
+        /\s*/,
+        /(\)|\[|\]|\})?/, // Group 12 - Closing bracket
+        /\s*$/
+    ], 'i');
+
+    // Endpoint
     function Endpoint(config) {
         this.v = 0;
         this.c = false;
@@ -219,7 +287,7 @@
 
     /** Prevents library conflicts */
     Interval.noConflict = function () {
-        global.Interval = prev;
+        root.Interval = prev;
         delete Interval.noConflict; // noConflict cannot be invoked again
         return Interval;
     };
@@ -243,10 +311,8 @@
      * @returns {String}  String representing interval in human-readable notation (e.g. [2,2]).
      */
     Interval.prototype.toString = function toString(openNotation, doNotSimpilfy) {
-        var doNotSimpilfy = arguments.length > 1 ? doNotSimplify : false,
-        str = '';
-        
-        
+        var str = '';
+        doNotSimpilfy = arguments.length > 1 ? doNotSimpilfy : false;
 
         if (!doNotSimpilfy) {
             if (this.isDegenerate()) {
@@ -257,7 +323,6 @@
                 return emptySet;
             }
         }
-
 
         if (this.t === 'integer') {
             // Left
@@ -272,7 +337,7 @@
             // Separator
             str += ',';
             // Right
-            str += this.right().value + getClosure(this.right(), 'right', openNotation);
+            str += this.right().value() + getClosure(this.right(), 'right', openNotation);
         }
         return str;
     };
@@ -351,6 +416,109 @@
                 isClosed: false
             })
         ];
+    };
+
+    // Static
+    // Based on https://github.com/vluzrmos/interval-js
+    Interval.test = function (value, interval) {
+
+    };
+
+    Interval.parse = function (str) {
+        // Degenerate:  {a}
+        // Open:        (a,b[
+        // Closed:      [a,b]
+        // Integer:     a..b
+        // Empty set: {} or ∅ 
+        // Infinity: ∞, Infinity and -Infinity
+        if (typeof str !== 'string' && !(str instanceof String)) {
+            throw new TypeError('parse called with a not string argument.');
+        }
+        var closingBracket,
+            error = new Error('"' + str + '" cannot be parsed to interval.'),
+            firstTerm,
+            matches = str.match(regex),
+            openingBracket,
+            secondTerm,
+            separator;
+
+        if (typeof matches === 'undefined' || !matches) {
+            throw error;
+        }
+
+        // Group 1 - Opening bracket 
+        openingBracket = matches[1];
+        // Group 2 - First term: Number, infinity or empty set (∅)
+        firstTerm = getNumber(matches[2]);
+        // Group 6 - Separator (, or ..)
+        separator = matches[6];
+        // Group 8 - Second term: Number or infinity
+        secondTerm = getNumber(matches[8]);
+        // Group 12 - Closing bracket
+        closingBracket = matches[12];
+
+        // Check empty set special character form
+        if (firstTerm === emptySet) {
+            if (typeof openingBracket === typeof separator === typeof separator === typeof secondTerm === typeof closingBracket === 'undefined') {
+                return new Interval();
+            }
+            throw error;
+        }
+
+        // Check curly brackets
+        if (openingBracket === '{' || closingBracket === '}') {
+            if (openingBracket === '{' && closingBracket === '}' && typeof separator !== 'undefined' && typeof secondTerm !== 'undefined') {
+                if (typeof firstTerm === 'undefined') {
+                    // Empty interval
+                    return new Interval();
+                }
+
+                // Degenerate interval {a}
+                return new Interval({
+                    type: isInt(firstTerm) ? 'integer' : 'float',
+                    endpoints: [{
+                        value: firstTerm,
+                        isClosed: true
+                    }, {
+                        value: firstTerm,
+                        isClosde: true
+                    }]
+                });
+
+            }
+            throw error;
+        }
+
+        // Check double dot notation (integer)
+        if (separator === '..') {
+            if (typeof firstTerm === 'undefined' || isFloat(firstTerm) || typeof secondTerm === 'undefined' || isFloat(secondTerm)) {
+                throw error;
+            }
+            return new Interval({
+                type: 'integer',
+                endpoints: [{
+                    value: getNumber(firstTerm),
+                    isClosed: true
+                }, {
+                    value: getNumber(secondTerm),
+                    isClosed: true
+                }]
+            });
+        }
+
+        return new Interval({
+            type: (isFloat(firstTerm) || isFloat(secondTerm)) ? 'float' : 'integer',
+            endpoints: [
+                {
+                    value: firstTerm,
+                    isClosed: openingBracket === '['
+                },
+                {
+                    value: getNumber(secondTerm),
+                    isClosed: closingBracket === ']'
+                }
+            ]
+        });
     };
 
     // Classification
@@ -518,5 +686,5 @@
 
     // FUTURE: Interval arithmetics
 
-    global.Interval = Interval;
-}(this));
+    return Interval;
+}));

@@ -1,0 +1,40 @@
+<html>
+
+<head>
+    <title>IntervalsJs</title>
+</head>
+
+<body>
+    <script src="../src/utils.js"></script>
+    <script src="../src/endpoint.js"></script>
+    <script src="../src/interval.js"></script>
+    <script>
+        var integer = new Interval({
+            type: 'integer',
+            endpoints: [{
+                value: -4,
+                isClosed: true
+            }, {
+                value: 5,
+                isClosed: true
+            }]
+        });
+
+        var float = new Interval({
+            endpoints: [{
+                value: -4.5,
+                isClosed: true
+            }, {
+                value: 5.1,
+                isClosed: false
+            }]
+        });
+        console.log('Integer in interval notation: ' + integer.toString());
+        console.log('Integer in integer notation: ' + integer.toString('integer'));
+        console.log('Float in interval notation: ' + float.toString());
+        console.log('Float in Bourbaki notation (square brackets only): ' + float.toString('bourbaki'));
+    </script>
+    <p>Show console log for results</p>
+</body>
+
+</html>

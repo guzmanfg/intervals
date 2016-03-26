@@ -1,16 +1,30 @@
-(function (root) {
+/*global define, module*/
+(function (root, factory) {
     'use strict';
+    if(typeof define === 'function' && define.amd) {
+        define(function(){
+            return (root.Utils = factory());
+        });
+    } else if(typeof module === 'object' && module.exports) {
+        module.exports = (root.Utils = factory());
+    } else {
+        root.Utils = factory();
+    }
+}(this, function() {
+    'use strict';
+
+    var Utils = {};
 
     // Helpers
     /**
      * Gets number value of string.
      * @param {String} str String representing a numeric value.
      */
-    root.getNumber = function getNumber(str) {
+    Utils.getNumber = function getNumber(str) {
         if (typeof str === 'undefined' || str === null) {
             return;
         }
-        if (!isNaN(str)) {
+        if (!isNaN(Number(str))) {
             return Number(str);
         }
         if (str.toUpperCase() === 'INF' || str === '∞') {
@@ -21,7 +35,7 @@
         }
     };
 
-    root.isArray = function isArray(arr) {
+    Utils.isArray = function isArray(arr) {
         return Object.prototype.toString.call(arr) === '[object Array]';
     };
 
@@ -31,52 +45,55 @@
      * @param   {Object}  n Parameter to be tested.
      * @returns {Boolean} true if parameter is a float number, false in other case.
      */
-    root.isFloat = function isFloat(n) {
+    Utils.isFloat = function isFloat(n) {
         return n === Number(n) && n % 1 !== 0;
     };
 
-    root.isFloatString = function isFloatString(str) {
-        var n = root.getNumber(str);
+    Utils.isFloatString = function isFloatString(str) {
+        var n = Utils.getNumber(str);
         return (typeof str === 'string' || str instanceof String) && // is string
-            !isNaN(n) && // represents a number 
-            ((n % 1 !== 0) || str.indexOf('.') >= 0 || !isFinite(n)); // actually is a float number, has decimal separator (e.g. 1.0) or is infinite
+               !isNaN(n) && // represents a number
+               ((n % 1 !== 0) || str.indexOf('.') >= 0 || !isFinite(n)); // actually is a float number, has decimal
+                                                                         // separator (e.g. 1.0) or is infinite
     };
 
     /**
      * Check if a value is an integer number.
      * @private
-     * @param   {Object}  n Parameter to be tested.
+     * @param   {Number}  n Parameter to be tested.
      * @returns {Boolean} true if parameter is an integer number, false in other case.
      */
-    root.isInt = function isInt(n) {
-        return Number(n) === n && (!isFinite(n) || n % 1 === 0); // infinite is a valid integer value
+    Utils.isInteger = function isInt(n) {
+            return Number(n) === n && (!isFinite(n) || n % 1 === 0); // infinite is a valid integer value
     };
 
     /**
      * Checks if a value is infinite.
      * @private
-     * @param   {Object}  n Parameter to be tested.
+     * @param   {Number}  n Parameter to be tested.
      * @returns {Boolean} true if parameter is infinite, false in other case.
      */
-    root.isInfinite = function isInfinite(n) {
+    Utils.isInfinite = function isInfinite(n) {
         return Number(n) === n && !isFinite(n);
     };
 
-    root.isNumber = function isNumber(n) {
+    Utils.isNumber = function isNumber(n) {
         return !isNaN(n);
     };
 
 
-    /** 
+    /**
      * Combines several regular expressions into a single one
      * @param {Array} regs Regular expressions
-     * @param {Strng} options (optional) RegExp flags
+     * @param {String} options (optional) RegExp flags
      */
-    root.multiregexp = function multiregexp(regs, options) {
+    Utils.multiregexp = function multiregexp(regs, options) {
         return new RegExp(regs.map(
-            function (reg) {
+            function(reg) {
                 return reg.source;
             }
         ).join(''), options);
     };
-}(this));
+
+    return Utils;
+}));

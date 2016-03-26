@@ -1,33 +1,41 @@
 {
-    "name": "interval",
-    "version": "1.0.0",
-    "description": "Microlibrary to work with intervals.",
-    "main": "src/interval.js",
-    "directories": {
-        "doc": "docs",
-        "test": "test"
-    },
-    "devDependencies": {
-        "mocha": "2.3.x",
-        "chai": "3.4.x"
-    },
-    "scripts": {
-        "test": "mocha -w"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/guzmanfg/intervals.git"
-    },
-    "keywords": [
-        "interval",
-        "math",
-        "range",
-        "endpoint"
-    ],
-    "author": "Guzmán Fernández García",
-    "license": "MIT",
-    "bugs": {
-        "url": "https://github.com/guzmanfg/intervals/issues"
-    },
-    "homepage": "https://github.com/guzmanfg/intervals#readme"
+  "name": "interval",
+  "version": "1.0.0",
+  "description": "Microlibrary to work with intervals.",
+  "main": "src/interval.js",
+  "directories": {
+    "doc": "docs",
+    "test": "test"
+  },
+  "devDependencies": {
+    "browserify": "^13.0.0",
+    "gulp": "^3.9.1",
+    "gulp-util": "^3.0.7",
+    "jasmine-core": "^2.4.1",
+    "karma": "^0.13.22",
+    "karma-chrome-launcher": "^0.2.3",
+    "karma-jasmine": "^0.3.8",
+    "karma-requirejs": "^0.2.6",
+    "requirejs": "^2.2.0",
+    "vinyl-source-stream": "^1.1.0"
+  },
+  "scripts": {
+    "test": "mocha -w"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/guzmanfg/intervals.git"
+  },
+  "keywords": [
+    "interval",
+    "math",
+    "range",
+    "endpoint"
+  ],
+  "author": "Guzmán Fernández García",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/guzmanfg/intervals/issues"
+  },
+  "homepage": "https://github.com/guzmanfg/intervals#readme"
 }

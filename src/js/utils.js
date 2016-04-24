@@ -1,11 +1,11 @@
 /*global define, module*/
-(function (root, factory) {
+(function(root, factory) {
     'use strict';
-    if(typeof define === 'function' && define.amd) {
-        define(function(){
+    if (typeof define === 'function' && define.amd) {
+        define(function() {
             return (root.Utils = factory());
         });
-    } else if(typeof module === 'object' && module.exports) {
+    } else if (typeof module === 'object' && module.exports) {
         module.exports = (root.Utils = factory());
     } else {
         root.Utils = factory();
@@ -39,6 +39,10 @@
         return Object.prototype.toString.call(arr) === '[object Array]';
     };
 
+    Utils.isBoolean = function(value) {
+        return typeof value === 'boolean';
+    };
+
     /**
      * Checks if a value is a float number.
      * @private
@@ -64,7 +68,7 @@
      * @returns {Boolean} true if parameter is an integer number, false in other case.
      */
     Utils.isInteger = function isInt(n) {
-            return Number(n) === n && (!isFinite(n) || n % 1 === 0); // infinite is a valid integer value
+        return Number(n) === n && (!isFinite(n) || n % 1 === 0); // infinite is a valid integer value
     };
 
     /**
@@ -88,11 +92,9 @@
      * @param {String} options (optional) RegExp flags
      */
     Utils.multiregexp = function multiregexp(regs, options) {
-        return new RegExp(regs.map(
-            function(reg) {
-                return reg.source;
-            }
-        ).join(''), options);
+        return new RegExp(regs.map(function(reg) {
+            return reg.source;
+        }).join(''), options);
     };
 
     return Utils;

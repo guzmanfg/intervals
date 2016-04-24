@@ -34,9 +34,8 @@
         /(([<>]=?|=)\s*([+\-]?(\d+(\.\d+)?|inf(inity)?|\u221E)|\u2205|\w))?/, // Optionals: Group 11 - Second operator,
                                                                               // Group 12 - Third term
         /\s*$/
-    ], 'i');
-
-
+    ], 'k');
+    
     function parser(str) {
         // Inequality
         // TODO: integer / float

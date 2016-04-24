@@ -2,7 +2,7 @@
 (function(root, factory) {
     'use strict';
     if (typeof define === 'function' && define.amd) {
-        define(['Interval'], function(Interval) {
+        define(['intervals'], function(Interval) {
             return (root.Interval = factory(Interval));
         });
     } else if (typeof module === 'object' && module.exports) {

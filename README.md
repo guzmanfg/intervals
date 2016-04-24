@@ -1,15 +1,13 @@
 # Intervals 
 
-Microlibrary to work with intervals.
+Library to work with intervals.
 
-Remarks
--------
-This library begins as a personal training with Git tool and GitHub platform.
+## Open for extension
 
-Sorry for the inconveniences.
 
-Guzmán.
+## TODO
 
-TODO
-----
 * Server side compatibility
+* Decimal comma (semicolon as separator)
+* Scientific notation (e.g. 1e-17)
+* Parsers with discontinuous intervals

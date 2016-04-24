@@ -1,13 +1,14 @@
 /*global require*/
-var gulp = require('gulp');
-var gutil = require('gulp-util');
-var source = require('vinyl-source-stream');
-var browserify = require('browserify');
+(function() {
+    'use strict';
+    var gulp = require('gulp');
+    var concat = require('gulp-concat');
 
-gulp.task('js', function(){
-    browserify('.')
-        .bundle()
-        .on('error',  gutil.log)
-        .pipe(source('intervals.js'))
-        .pipe(gulp.dest('/dist'));
-})
+    gulp.task('build', function() {
+        return gulp.src(['./src/js/utils.js', './src/js/endpoint.js', './src/js/intervals.js'])
+                   .pipe(concat('intervals.js'))
+                   .pipe(gulp.dest('./dist/'));
+    });
+
+    gulp.task('default', ['build']);
+}());

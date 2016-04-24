@@ -15,7 +15,7 @@
     }
 }(this, function(Interval, Endpoint) {
     'use strict';
-
+    
     function parse(json) {
         return new Interval({
             type: json.type,
@@ -28,12 +28,12 @@
      * Exports interval to a plain JSON string
      * @returns {String}  JSON stringified
      */
-    function toString(interval) {
+    function stringify(interval) {
         return JSON.stringify(interval);
     }
 
     return {
         parse: parse,
-        toString: toString
+        stringify: stringify
     };
 }));

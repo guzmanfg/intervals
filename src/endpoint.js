@@ -1,27 +1,9 @@
-/*global define, module, require*/
-(function(root, factory) {
-    'use strict';
-    if (typeof define === 'function' && define.amd) {
-        define(['Utils'], function(Utils) {
-            return (root.Endpoint = factory(Utils));
-        });
-    } else if (typeof module === 'object' && module.exports) {
-        module.exports = (root.Endpoint = factory(require('Utils')));
-    } else {
-        root.Endpoint = factory(root.Utils);
-    }
-}(this, function(Utils) {
-    'use strict';
-
-    /**
-     * Endpoint class
-     * @param config
-     * @constructor
-     */
+"use strict";
+var Numbers = require('./numbers');
+var Endpoint = (function () {
     function Endpoint(config) {
         this.v = 0;
-        this.i = false;
-
+        this.k = true;
         if (config) {
             if (config.value) {
                 this.value = config.value;
@@ -30,36 +12,61 @@
                 this.included = config.included;
             }
         }
+        return this;
     }
-
-    Object.defineProperty(Endpoint.prototype, 'included', {
-        configurable: false,
-        get: function() {
-            return this.i;
-        },
-        set: function(value) {
-            if (typeof value === 'boolean') {
-                this.i = value;
-            } else {
-                throw new TypeError('included called with invalid value: "' + value + '".');
-            }
-        }
-    });
-
-    Object.defineProperty(Endpoint.prototype, 'value', {
-        configurable: false,
-        get: function() {
+    Object.defineProperty(Endpoint.prototype, "value", {
+        // Getters and setters
+        get: function () {
             return this.v;
         },
-        set: function(value) {
-            var val = Utils.getNumber(value);
-            if (Utils.isInteger(val) || Utils.isFloat(val)) {
+        set: function (value) {
+            var val = Numbers.getNumber(value);
+            if (Numbers.isInteger(val) || Numbers.isFloat(val)) {
                 this.v = val;
-            } else {
+            }
+            else {
                 throw new TypeError('value called with invalid param value: "' + value + '".');
             }
-        }
+        },
+        enumerable: true,
+        configurable: true
     });
-
+    Object.defineProperty(Endpoint.prototype, "included", {
+        get: function () {
+            return this.k;
+        },
+        set: function (value) {
+            this.k = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Endpoint.checkValue = function (value, type) {
+        if (type === 'integer' && !Numbers.isInteger(value)) {
+            throw new TypeError('Invalid integer value.');
+        }
+    };
+    Endpoint.tryParseValue = function (ep) {
+        var numericValue = Numbers.getNumber(ep.value);
+        Endpoint.checkValue(numericValue, ep.type);
+        return numericValue;
+    };
+    Endpoint.tryParseInclusion = function (ep) {
+        if (ep.included === 'true' || ep.included === 'false') {
+            return ep.included === 'true';
+        }
+        else if (typeof ep.included === 'boolean') {
+            return ep.included;
+        }
+        throw new TypeError('Invalid inclusion type: "' + ep.included + '"');
+    };
+    Endpoint.parse = function (ep) {
+        return new Endpoint({
+            included: Endpoint.tryParseInclusion(ep),
+            value: Endpoint.tryParseValue(ep)
+        });
+    };
     return Endpoint;
-}));
+}());
+module.exports = Endpoint;
+//# sourceMappingURL=endpoint.js.map

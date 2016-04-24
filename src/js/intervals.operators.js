@@ -2,23 +2,23 @@
 (function(root, factory) {
     'use strict';
     if (typeof define === 'function' && define.amd) {
-        define(['Interval', 'Endpoint'], function(Interval, Endpoint) {
-                return (root.Interval = factory(Interval, Endpoint));
+        define(['intervals', 'Endpoint'], function(Interval, Endpoint) {
+                return (Interval.Operators = factory(Interval, Endpoint));
             }
         );
     } else if (typeof module === 'object' && module.exports) {
-        module.exports = (root.Interval = factory(require('Interval'), require('Endpoint')));
+        module.exports = (factory(require('Interval'), require('Endpoint')));
     } else {
-        root.Interval = factory(root.Interval, root.Utils);
+        root.Interval.Operators = factory(root.Interval, root.Utils);
     }
 }(this, function(Interval, Endpoint) {
     'use strict';
 
     /**
-     * Gets complementary interval of the current one.
+     * Gets complementary interval.
      * @static
-     * @param   {Interval}       interval Interval of which complementary will be calculated.
-     * @returns {Intervla|Array} New interval or array of intervals representing complementary.
+     * @param {Interval} interval Interval of which complementary will be calculated.
+     * @returns {Interval|Array<Interval>} New Interval or Interval array representing complementary.
      */
     Interval.complementary = function(interval) {
         // Empty
@@ -102,8 +102,8 @@
     };
 
     /**
-     * Gets complementary interval of the current one.
-     * @returns {Interval|Array} Interval or array of intervals representing complementary of current one.
+     * Gets complementary interval
+     * @returns {Interval|Array} Interval or Interval array representing complementary.
      */
     Interval.prototype.complementary = function() {
         return Interval.complementary(this);
@@ -267,19 +267,19 @@
         while (stack.length) {
             current = stack.shift();
 
-            for (i = 0; i < result.length; i++) {
-                united = union(result[i], current);
+            for (k = 0; k < result.length; k++) {
+                united = union(result[k], current);
                 if (united.length === 1) {
                     // remove from results
-                    result.splice(i, 1);
+                    result.splice(k, 1);
                     // push union to stack
                     stack.push(united[0]);
-                    i = -1;
+                    k = -1;
                     break;
                 }
             }
 
-            if (i >= result.length) {
+            if (k >= result.length) {
                 result.push(current);
             }
         }

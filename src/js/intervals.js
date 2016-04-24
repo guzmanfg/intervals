@@ -20,8 +20,10 @@
 
     /**
      * @class Interval Interval class
-     * @param {Object} config Interval configuration options:
-     *                        { type: String 'float' (default) | 'integer', endpoints: Array }
+     * @param {Object} config Interval configuration options
+     * @param {string}  [config.type=float] 'float' or 'integer'
+     * @param {Object|Endpoint} [config.from]   left endpoint of the interval.
+     * @param {Object|Endpoint} [config.to]   right endpoint of the interval.
      */
     function Interval(config) {
         /**
@@ -61,11 +63,11 @@
             }
         }
     }
-    
+
     /**
      * Prevents library conflicts
      */
-    if(this === window) {
+    if (this === window) {
         prev = this.Interval
         Interval.noConflict = function() {
             this.Interval = prev;
@@ -89,15 +91,14 @@
     Object.defineProperty(Interval, 'empty', {
         get: function empty() {
             return new Interval({
-                endpoints: [
-                    new Endpoint({
-                        value: 0,
-                        included: false
-                    }), new Endpoint({
-                        value: 0,
-                        included: false
-                    })
-                ]
+                from: {
+                    value: 0,
+                    included: false
+                },
+                to: {
+                    value: 0,
+                    included: false
+                }
             });
         }
     });
@@ -160,10 +161,7 @@
 
     function tryParseValue(ep) {
         var numericValue = Utils.getNumber(ep.value);
-        if (!numericValue) {
-            throw new TypeError('Invalid value type: "' + ep.value + '"');
-        }
-        checkValue(numericValue, ep.type)
+        checkValue(numericValue, ep.type);
         return numericValue;
     }
 
@@ -201,6 +199,7 @@
                 this.l = parseEndpoint(value);
             }
             catch (e) {
+                throw e;
                 var error = (e instanceof TypeError) ? new TypeError() : new Error();
                 error.message = 'Invalid call to "from". See inner error for more info.';
                 error.inner = e;

@@ -16,18 +16,22 @@ module.exports = function(config) {
 
         // list of files / patterns to load in the browser
         files: [
-            'src/utils.js',
-            'src/endpoint.js',
-            'src/interval.js',
-            'src/parsers/parser.js',
-            'src/parsers/parser.*.js',
-            'src/interval.*.js',
+            'src/js/utils.js',
+            'src/js/endpoint.js',
+            'src/js/intervals.js',
+            'src/js/intervals.*.js',
+            'src/js/parsers/parsers.js',
+            'src/js/parsers/parsers.*.js',
             'test/**/*.js'
         ],
 
 
         // list of files to exclude
-        exclude: ['src/index.js', 'src/parsers/*'],
+        exclude: [
+            'src/js/index.js',
+            'src/js/parsers/parsers.string.inequality.js',
+            'src/js/parsers/parsers.string.list.js'
+        ],
 
 
         // preprocess matching files before serving them to the browser

@@ -1,4 +1,7 @@
 /*global describe, it, expect, Interval*/
+var expect = require('chai').expect;
+var Interval = require('../src/intervals.classification');
+
 describe('interval classification', function() {
     'use strict';
     describe('isEmpty', function() {
@@ -13,7 +16,7 @@ describe('interval classification', function() {
                     included: true
                 }
             });
-            expect(interval.isEmpty).toBe(true);
+            expect(interval.isEmpty).to.be.true;
         });
     });
 
@@ -30,7 +33,7 @@ describe('interval classification', function() {
                     included: true
                 }
             });
-            expect(interval.isDegenerate).toBe(true);
+            expect(interval.isDegenerate).to.be.grue;
         });
     });
 });

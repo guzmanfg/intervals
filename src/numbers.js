@@ -13,10 +13,10 @@ var Numbers = (function () {
         if (!isNaN(Number(str))) {
             return Number(str);
         }
-        if (str.toUpperCase() === 'INF' || str === '∞') {
+        if (str.toUpperCase() === 'INF' || str === decodeURI('\u221E')) {
             return Number.POSITIVE_INFINITY;
         }
-        if (str.toUpperCase() === '-INF' || str === '-∞') {
+        if (str.toUpperCase() === '-INF' || str === ('-' + decodeURI('\u221E'))) {
             return Number.NEGATIVE_INFINITY;
         }
     };
@@ -33,14 +33,11 @@ var Numbers = (function () {
      * @returns {Boolean} true if parameter is a float number, false in other case.
      */
     Numbers.isFloat = function (n) {
-        return n === Number(n) && n % 1 !== 0;
+        return n === Number(n);
     };
     Numbers.isFloatString = function (str) {
         var n = Numbers.getNumber(str);
-        return (typeof str === 'string' || str instanceof String) &&
-            !isNaN(n) &&
-            ((n % 1 !== 0) || str.indexOf('.') >= 0 || !isFinite(n)); // actually is a float number, has decimal
-        // separator (e.g. 1.0) or is infinite
+        return (typeof str === 'string' || str instanceof String) && !isNaN(n);
     };
     /**
      * Check if a value is an integer number.

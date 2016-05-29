@@ -1,7 +1,7 @@
 import Endpoint = require('./endpoint')
-import Base = require('./intervals.classification')
+import Interval = require('./intervals.classification')
 
-class Interval extends Base {
+class Operators {
     /**
      * Gets complementary interval.
      * @static
@@ -85,10 +85,6 @@ class Interval extends Base {
         return result;
     }
 
-    complementary():Array<Interval> {
-        return Interval.complementary(this);
-    }
-
     private static intersects(a, b) {
         var d1 = a.from.value - b.to.value,
             d2 = a.to.value - b.from.value;
@@ -103,7 +99,7 @@ class Interval extends Base {
             throw new TypeError('Both intervals types must match.');
         }
 
-        if (!Interval.intersects(a, b)) {
+        if (!Operators.intersects(a, b)) {
             return Interval.Empty;
         }
 
@@ -128,7 +124,7 @@ class Interval extends Base {
 
     static intersection(...intervals:Array<Interval>):Interval {
         var stack = Array.prototype.slice.call(intervals);
-        var current;
+        var current = null;
         var result;
 
         while (stack.length) {
@@ -139,17 +135,13 @@ class Interval extends Base {
                 continue;
             }
 
-            result = Interval.binaryIntersection(result, current);
+            result = Operators.binaryIntersection(result, current);
             if (result.isEmpty) {
                 break;
             }
         }
 
         return result;
-    };
-
-    intersection():Interval {
-        return Interval.intersection.apply(null, Array.prototype.concat([this], Array.prototype.slice.call(arguments)));
     };
 
     private static getUnionFromIncluded(a, b):boolean {
@@ -169,7 +161,7 @@ class Interval extends Base {
     private static getUnionFrom(a, b):Endpoint {
         return new Endpoint({
             value: Math.min(a.value, b.value),
-            included: Interval.getUnionFromIncluded(a, b)
+            included: Operators.getUnionFromIncluded(a, b)
         });
     }
 
@@ -190,23 +182,23 @@ class Interval extends Base {
     private static getUnionTo(a, b):Endpoint {
         return new Endpoint({
             value: Math.max(a.value, b.value),
-            included: Interval.getUnionToIncluded(a, b)
+            included: Operators.getUnionToIncluded(a, b)
         });
     }
 
-    private static union(a:Interval, b:Interval):Array<Interval> {
+    private static binaryUnion(a:Interval, b:Interval):Array<Interval> {
         if (a.type !== b.type) {
             throw new TypeError('Both intervals types must match.');
         }
 
         // If intervals do not intersect, union is both intervals
-        if (!Interval.intersects(a, b)) {
+        if (!Operators.intersects(a, b)) {
             return [a, b];
         }
 
         // Get larger and smaller values and if they are included or not
-        var from = Interval.getUnionFrom(a.from, b.from);
-        var to = Interval.getUnionTo(a.to, b.to);
+        var from = Operators.getUnionFrom(a.from, b.from);
+        var to = Operators.getUnionTo(a.to, b.to);
 
 
         return [
@@ -223,7 +215,7 @@ class Interval extends Base {
      * @param {...*} var_args
      * @returns {Array<Interval>}  Interval or array of intervals representing union of this method parameters.
      */
-    union = function (...intervals:Array<Interval>):Array<Interval> {
+    static union(...intervals:Array<Interval>):Array<Interval> {
         // Use of arguments
         var current;
         var k;
@@ -235,7 +227,7 @@ class Interval extends Base {
             current = stack.shift();
 
             for (k = 0; k < result.length; k++) {
-                united = Interval.union(result[k], current);
+                united = Operators.binaryUnion(result[k], current);
                 if (united.length === 1) {
                     // remove from results
                     result.splice(k, 1);

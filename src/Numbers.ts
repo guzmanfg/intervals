@@ -10,10 +10,10 @@ class Numbers {
         if (!isNaN(Number(str))) {
             return Number(str);
         }
-        if (str.toUpperCase() === 'INF' || str === '∞') {
+        if (str.toUpperCase() === 'INF' || str === decodeURI('\u221E')) {
             return Number.POSITIVE_INFINITY;
         }
-        if (str.toUpperCase() === '-INF' || str === '-∞') {
+        if (str.toUpperCase() === '-INF' || str === ('-' + decodeURI('\u221E'))) {
             return Number.NEGATIVE_INFINITY;
         }
     }
@@ -33,15 +33,12 @@ class Numbers {
      * @returns {Boolean} true if parameter is a float number, false in other case.
      */
     static isFloat(n):boolean {
-        return n === Number(n) && n % 1 !== 0;
+        return n === Number(n);
     }
 
     static isFloatString(str):boolean {
         var n = Numbers.getNumber(str);
-        return (typeof str === 'string' || str instanceof String) && // is string
-            !isNaN(n) && // represents a number
-            ((n % 1 !== 0) || str.indexOf('.') >= 0 || !isFinite(n)); // actually is a float number, has decimal
-                                                                      // separator (e.g. 1.0) or is infinite
+        return (typeof str === 'string' || str instanceof String) && !isNaN(n);
     }
 
     /**

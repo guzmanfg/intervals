@@ -1,5 +1,6 @@
 import Numbers = require('./numbers');
 import Endpoint = require('./endpoint');
+
 class Interval {
     /**
      * Type attribute ('integer' or 'float'). Use Interval#type to work with interval type correctly.
@@ -93,15 +94,14 @@ class Interval {
     }
 
     contains(value:number):boolean {
-        var isFloatValue = (Numbers.isFloat(value) || Numbers.isFloatString(value));
-        var number = Numbers.getNumber(value);
+        var isIntegerValue = Numbers.isInteger(value);
         var isInteger = this.type === 'integer';
 
-        if (isNaN(number) || (isInteger && isFloatValue)) {
+        if (isNaN(value) || isInteger !== isIntegerValue) {
             throw new TypeError('"' + value + '" is not a valid ' + this.type + ' value.');
         }
 
-        return this.isValueWithinInterval(number);
+        return this.isValueWithinInterval(value);
     }
 
     private isValueWithinInterval(value:number):boolean {
@@ -114,9 +114,9 @@ class Interval {
             (isGreaterThanLeftEndpoint || isEqualToIncludedLeftEndpoint);
     }
 
-    static extend(extensions:Array<any>):void{
+    static extend(extensions:Array<any>):void {
         var i;
-        for(i = 0; i < extensions.length;i++){
+        for (i = 0; i < extensions.length; i++) {
             Interval.prototype[extensions[i].name] = extensions[i].fn.bind(this, this);
         }
     }

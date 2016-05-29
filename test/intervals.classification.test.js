@@ -5,7 +5,7 @@ var Interval = require('../src/intervals.classification');
 describe('interval classification', function() {
     'use strict';
     describe('isEmpty', function() {
-        it('[a,b] where a > b should be an empty interval', function() {
+        it('returns true for [a,b] where a > b', function() {
             var interval = new Interval({
                 from: {
                     value: 2,
@@ -21,7 +21,7 @@ describe('interval classification', function() {
     });
 
     describe('isDegenerate', function() {
-        it('(a,b] where a = b - 1 should create an integer interval wich is degenerate {b}', function() {
+        it('returns true for (a,b] where a = b - 1', function() {
             var interval = new Interval({
                 type: 'integer',
                 from: {
@@ -33,7 +33,7 @@ describe('interval classification', function() {
                     included: true
                 }
             });
-            expect(interval.isDegenerate).to.be.grue;
+            expect(interval.isDegenerate).to.be.true;
         });
     });
 });

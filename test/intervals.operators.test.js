@@ -5,7 +5,7 @@ var Interval = require('../src/intervals.operators');
 describe('interval operators', function() {
     'use strict';
     describe('and', function() {
-        it('[a,b] where a > b should be an empty interval', function() {
+        it('returns and empty interval for [a,b] where a > b', function() {
             var interval = new Interval({
                 from: {
                     value: 2,

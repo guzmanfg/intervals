@@ -1,50 +1,8 @@
 "use strict";
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
 var Endpoint = require('./endpoint');
-var Base = require('./intervals.classification');
-var Interval = (function (_super) {
-    __extends(Interval, _super);
-    function Interval() {
-        _super.apply(this, arguments);
-        /**
-         * Gets union of intervals
-         * @param {...*} var_args
-         * @returns {Array<Interval>}  Interval or array of intervals representing union of this method parameters.
-         */
-        this.union = function () {
-            var intervals = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                intervals[_i - 0] = arguments[_i];
-            }
-            // Use of arguments
-            var current;
-            var k;
-            var result = [];
-            var stack = Array.prototype.slice.call(intervals);
-            var united;
-            while (stack.length) {
-                current = stack.shift();
-                for (k = 0; k < result.length; k++) {
-                    united = Interval.union(result[k], current);
-                    if (united.length === 1) {
-                        // remove from results
-                        result.splice(k, 1);
-                        // push union to stack
-                        stack.push(united[0]);
-                        k = -1;
-                        break;
-                    }
-                }
-                if (k >= result.length) {
-                    result.push(current);
-                }
-            }
-            return result;
-        };
+var Interval = require('./intervals.classification');
+var Operators = (function () {
+    function Operators() {
     }
     /**
      * Gets complementary interval.
@@ -52,7 +10,7 @@ var Interval = (function (_super) {
      * @param {Interval} interval Interval of which complementary will be calculated.
      * @returns {Array<Interval>} Interval array representing complementary.
      */
-    Interval.complementary = function (interval) {
+    Operators.complementary = function (interval) {
         // Empty
         if (interval.isEmpty) {
             // Total of R
@@ -124,21 +82,18 @@ var Interval = (function (_super) {
         result.type = interval.type;
         return result;
     };
-    Interval.prototype.complementary = function () {
-        return Interval.complementary(this);
-    };
-    Interval.intersects = function (a, b) {
+    Operators.intersects = function (a, b) {
         var d1 = a.from.value - b.to.value, d2 = a.to.value - b.from.value;
         return !a.isEmpty && !b.isEmpty &&
             ((d1 === 0 && (a.from.included || b.to.included)) || (d2 === 0 && (a.to.included || b.from.included)) ||
                 ((d1 <= 0) !== (d2 <= 0)));
     };
     ;
-    Interval.binaryIntersection = function (a, b) {
+    Operators.binaryIntersection = function (a, b) {
         if (a.type !== b.type) {
             throw new TypeError('Both intervals types must match.');
         }
-        if (!Interval.intersects(a, b)) {
+        if (!Operators.intersects(a, b)) {
             return Interval.Empty;
         }
         // Get larger and smaller values and if they are included or not
@@ -157,13 +112,13 @@ var Interval = (function (_super) {
             to: to
         });
     };
-    Interval.intersection = function () {
+    Operators.intersection = function () {
         var intervals = [];
         for (var _i = 0; _i < arguments.length; _i++) {
             intervals[_i - 0] = arguments[_i];
         }
         var stack = Array.prototype.slice.call(intervals);
-        var current;
+        var current = null;
         var result;
         while (stack.length) {
             result = current;
@@ -171,7 +126,7 @@ var Interval = (function (_super) {
             if (typeof result === 'undefined') {
                 continue;
             }
-            result = Interval.binaryIntersection(result, current);
+            result = Operators.binaryIntersection(result, current);
             if (result.isEmpty) {
                 break;
             }
@@ -179,11 +134,7 @@ var Interval = (function (_super) {
         return result;
     };
     ;
-    Interval.prototype.intersection = function () {
-        return Interval.intersection.apply(null, Array.prototype.concat([this], Array.prototype.slice.call(arguments)));
-    };
-    ;
-    Interval.getUnionFromIncluded = function (a, b) {
+    Operators.getUnionFromIncluded = function (a, b) {
         var result;
         if (a.value < b.value) {
             result = a.included;
@@ -196,13 +147,13 @@ var Interval = (function (_super) {
         }
         return result;
     };
-    Interval.getUnionFrom = function (a, b) {
+    Operators.getUnionFrom = function (a, b) {
         return new Endpoint({
             value: Math.min(a.value, b.value),
-            included: Interval.getUnionFromIncluded(a, b)
+            included: Operators.getUnionFromIncluded(a, b)
         });
     };
-    Interval.getUnionToIncluded = function (a, b) {
+    Operators.getUnionToIncluded = function (a, b) {
         var result;
         if (a.value < b.value) {
             result = b.included;
@@ -215,23 +166,23 @@ var Interval = (function (_super) {
         }
         return result;
     };
-    Interval.getUnionTo = function (a, b) {
+    Operators.getUnionTo = function (a, b) {
         return new Endpoint({
             value: Math.max(a.value, b.value),
-            included: Interval.getUnionToIncluded(a, b)
+            included: Operators.getUnionToIncluded(a, b)
         });
     };
-    Interval.union = function (a, b) {
+    Operators.binaryUnion = function (a, b) {
         if (a.type !== b.type) {
             throw new TypeError('Both intervals types must match.');
         }
         // If intervals do not intersect, union is both intervals
-        if (!Interval.intersects(a, b)) {
+        if (!Operators.intersects(a, b)) {
             return [a, b];
         }
         // Get larger and smaller values and if they are included or not
-        var from = Interval.getUnionFrom(a.from, b.from);
-        var to = Interval.getUnionTo(a.to, b.to);
+        var from = Operators.getUnionFrom(a.from, b.from);
+        var to = Operators.getUnionTo(a.to, b.to);
         return [
             new Interval({
                 type: a.type === 'float' || b.type === 'float' ? 'float' : 'integer',
@@ -239,7 +190,43 @@ var Interval = (function (_super) {
             })
         ];
     };
-    return Interval;
-}(Base));
+    /**
+     * Gets union of intervals
+     * @param {...*} var_args
+     * @returns {Array<Interval>}  Interval or array of intervals representing union of this method parameters.
+     */
+    Operators.union = function () {
+        var intervals = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            intervals[_i - 0] = arguments[_i];
+        }
+        // Use of arguments
+        var current;
+        var k;
+        var result = [];
+        var stack = Array.prototype.slice.call(intervals);
+        var united;
+        while (stack.length) {
+            current = stack.shift();
+            for (k = 0; k < result.length; k++) {
+                united = Operators.binaryUnion(result[k], current);
+                if (united.length === 1) {
+                    // remove from results
+                    result.splice(k, 1);
+                    // push union to stack
+                    stack.push(united[0]);
+                    k = -1;
+                    break;
+                }
+            }
+            if (k >= result.length) {
+                result.push(current);
+            }
+        }
+        return result;
+    };
+    ;
+    return Operators;
+}());
 module.exports = Interval;
 //# sourceMappingURL=intervals.operators.js.map

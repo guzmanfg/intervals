@@ -1,6 +1,7 @@
 import Endpoint = require('./endpoint')
 import Base = require('./intervals')
 
+// Adds classification to intervals
 class Interval extends Base {
     /**
      * Gets if interval is bounded

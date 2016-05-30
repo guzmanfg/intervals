@@ -1,4 +1,3 @@
-"use strict";
 var Numbers = require('./numbers');
 var Endpoint = (function () {
     function Endpoint(config) {
@@ -67,6 +66,6 @@ var Endpoint = (function () {
         });
     };
     return Endpoint;
-}());
+})();
 module.exports = Endpoint;
 //# sourceMappingURL=endpoint.js.map

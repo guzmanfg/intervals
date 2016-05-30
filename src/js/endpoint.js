@@ -2,11 +2,11 @@
 (function(root, factory) {
     'use strict';
     if (typeof define === 'function' && define.amd) {
-        define(['Utils'], function(Utils) {
+        define(['utils'], function(Utils) {
             return (root.Endpoint = factory(Utils));
         });
     } else if (typeof module === 'object' && module.exports) {
-        module.exports = (root.Endpoint = factory(require('Utils')));
+        module.exports = (root.Endpoint = factory(require('./utils')));
     } else {
         root.Endpoint = factory(root.Utils);
     }

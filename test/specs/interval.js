@@ -1,4 +1,9 @@
-/*global define, describe, expect, describe, it, Interval*/
+/*global require, describe, it*/
+var expect = require('chai').expect;
+var Utils = require('../../src/js/utils');
+var Endpoint = require('../../src/js/endpoint');
+var Interval = require('../../src/js/intervals');
+
 describe('interval', function() {
     'use strict';
     function isInstanceOfInterval(interval) {
@@ -8,16 +13,16 @@ describe('interval', function() {
     describe('constructor', function() {
         it('should create an empty float interval', function() {
             var interval = new Interval();
-            expect(isInstanceOfInterval(interval)).toBe(true);
-            expect(interval.type).toBe('float');
+            expect(isInstanceOfInterval(interval)).to.be.true;
+            expect(interval.type).to.equal('float');
         });
 
         it('should create an empty integer interval', function() {
             var interval = new Interval({
                 type: 'integer'
             });
-            expect(isInstanceOfInterval(interval)).toBe(true);
-            expect(interval.type).toBe('integer');
+            expect(isInstanceOfInterval(interval)).to.be.true;
+            expect(interval.type).to.equal('integer');
         });
 
         it('should create an open integer interval (1,2)', function() {
@@ -33,11 +38,11 @@ describe('interval', function() {
                 }
             });
 
-            expect(interval.from.value).toBe(1);
-            expect(interval.from.included).toBe(false);
-            expect(interval.to.value).toBe(2);
-            expect(interval.to.included).toBe(false);
-            expect(interval.type).toBe('integer');
+            expect(interval.from.value).to.equal(1);
+            expect(interval.from.included).to.be.false;
+            expect(interval.to.value).to.equal(2);
+            expect(interval.to.included).to.be.false;
+            expect(interval.type).to.equal('integer');
         });
 
         it('should create a closed float interval (1,2)', function() {
@@ -53,11 +58,11 @@ describe('interval', function() {
                 }
             });
 
-            expect(interval.from.value).toBe(1);
-            expect(interval.from.included).toBe(true);
-            expect(interval.to.value).toBe(2);
-            expect(interval.to.included).toBe(true);
-            expect(interval.type).toBe('float');
+            expect(interval.from.value).to.equal(1);
+            expect(interval.from.included).to.be.true;
+            expect(interval.to.value).to.equal(2);
+            expect(interval.to.included).to.be.true;
+            expect(interval.type).to.equal('float');
         });
     });
 
@@ -77,19 +82,19 @@ describe('interval', function() {
             });
 
             it('should check inner value is within the open integer interval', function() {
-                expect(openInteger.test(1)).toBe(true);
+                expect(openInteger.test(1)).to.be.true;
             });
             it('should check left endpoint value is not within the open integer interval', function() {
-                expect(openInteger.test(-5)).toBe(false);
+                expect(openInteger.test(-5)).to.be.false;
             });
             it('should check right endpoint value is not within the open integer interval', function() {
-                expect(openInteger.test(5)).toBe(false);
+                expect(openInteger.test(5)).to.be.false;
             });
             it('should check a value lower than left endpoint is not within the open integer interval', function() {
-                expect(openInteger.test(-6)).toBe(false);
+                expect(openInteger.test(-6)).to.be.false;
             });
             it('should check a value greater than right endpoint is not within the open integer interval', function() {
-                expect(openInteger.test(6)).toBe(false);
+                expect(openInteger.test(6)).to.be.false;
             });
         });
         describe('closed integer interval', function() {
@@ -105,22 +110,22 @@ describe('interval', function() {
                 }
             });
             it('should check inner value is within the closed integer interval', function() {
-                expect(closedInteger.test(1)).toBe(true);
+                expect(closedInteger.test(1)).to.be.true;
             });
             it('should check left endpoint value is within the closed integer interval', function() {
-                expect(closedInteger.test(-5)).toBe(true);
+                expect(closedInteger.test(-5)).to.be.true;
             });
 
             it('should check right endpoint value is within the closed integer interval', function() {
-                expect(closedInteger.test(5)).toBe(true);
+                expect(closedInteger.test(5)).to.be.true;
             });
 
             it('should check a value lower than left endpoint is not within the closed integer interval', function() {
-                expect(closedInteger.test(-6)).toBe(false);
+                expect(closedInteger.test(-6)).to.be.false;
             });
 
             it('should check a value greater than right endpoint is not within the closed integer interval', function() {
-                expect(closedInteger.test(6)).toBe(false);
+                expect(closedInteger.test(6)).to.be.false;
             });
         });
     });

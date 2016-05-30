@@ -2,12 +2,12 @@
 (function(root, factory) {
     'use strict';
     if (typeof define === 'function' && define.amd) {
-        define(['intervals', 'Endpoint'], function(Interval, Endpoint) {
+        define(['intervals', 'endpoint'], function(Interval, Endpoint) {
                 return (Interval.Operators = factory(Interval, Endpoint));
             }
         );
     } else if (typeof module === 'object' && module.exports) {
-        module.exports = (factory(require('Interval'), require('Endpoint')));
+        module.exports = (factory(require('./intervals'), require('./endpoint')));
     } else {
         root.Interval.Operators = factory(root.Interval, root.Utils);
     }
@@ -140,7 +140,6 @@
 
         // Get larger and smaller values and if they are included or not
         var d = a.from.value - b.from.value,
-            d2 = a.to.value - b.to.value,
             from = d > 0 ? a.from : d < 0 ? b.from : new Endpoint({
                 value: a.from.value,
                 included: a.from.included && b.from.included
@@ -254,12 +253,13 @@
 
     /**
      * Gets union of intervals
-     * @param {...*} var_args
+     * @param {...*}
      * @returns {Interval|Array}  Interval or array of intervals representing union of this method parameters.
      */
     Interval.union = function() {
         // Use of arguments
-        var current, i,
+        var current,
+	        k,
             result = [],
             stack = Array.prototype.slice.call(arguments),
             united;

@@ -6,7 +6,7 @@
             return (root.Interval = factory(Interval));
         });
     } else if (typeof module === 'object' && module.exports) {
-        module.exports = (root.Interval = factory(require('Interval')));
+        module.exports = (root.Interval = factory(require('./intervals')));
     } else {
         root.Interval = factory(root.Interval, root.Utils);
     }

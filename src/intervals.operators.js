@@ -1,4 +1,3 @@
-"use strict";
 var Endpoint = require('./endpoint');
 var Interval = require('./intervals.classification');
 var Operators = (function () {
@@ -192,8 +191,8 @@ var Operators = (function () {
     };
     /**
      * Gets union of intervals
-     * @param {...*} var_args
-     * @returns {Array<Interval>}  Interval or array of intervals representing union of this method parameters.
+     * @param {...Interval} intervals
+     * @returns {Array<Interval>} intervals Interval or array of intervals representing union of this method parameters.
      */
     Operators.union = function () {
         var intervals = [];
@@ -204,7 +203,7 @@ var Operators = (function () {
         var current;
         var k;
         var result = [];
-        var stack = Array.prototype.slice.call(intervals);
+        var stack = intervals.slice();
         var united;
         while (stack.length) {
             current = stack.shift();
@@ -225,8 +224,7 @@ var Operators = (function () {
         }
         return result;
     };
-    ;
     return Operators;
-}());
-module.exports = Interval;
+})();
+exports.Operators = Operators;
 //# sourceMappingURL=intervals.operators.js.map

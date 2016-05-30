@@ -2,11 +2,11 @@
 (function(root, factory) {
     'use strict';
     if (typeof define === 'function' && define.amd) {
-        define(['Interval', 'Utils'], function(Interval, Utils) {
+        define(['../intervals', '../utils'], function(Interval, Utils) {
             factory(Interval, Utils);
         });
     } else if (typeof module === 'object' && module.exports) {
-        root.Interval = factory(require('Interval'), require('Utils'));
+        root.Interval = factory(require('../intervals'), require('../utils'));
     } else {
         factory(root.Interval, root.Utils);
     }

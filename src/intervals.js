@@ -1,4 +1,3 @@
-"use strict";
 var Numbers = require('./numbers');
 var Endpoint = require('./endpoint');
 var Interval = (function () {
@@ -226,7 +225,16 @@ var Interval = (function () {
         enumerable: true,
         configurable: true
     });
+    Interval.Factory = function () {
+        var modules = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            modules[_i - 0] = arguments[_i];
+        }
+        var i;
+        for (i = 0; i < modules.length; i++) {
+        }
+    };
     return Interval;
-}());
+})();
 module.exports = Interval;
 //# sourceMappingURL=intervals.js.map

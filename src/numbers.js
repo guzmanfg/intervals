@@ -1,4 +1,3 @@
-"use strict";
 var Numbers = (function () {
     function Numbers() {
     }
@@ -61,6 +60,6 @@ var Numbers = (function () {
         return !isNaN(n);
     };
     return Numbers;
-}());
+})();
 module.exports = Numbers;
 //# sourceMappingURL=numbers.js.map

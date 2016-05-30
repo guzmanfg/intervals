@@ -22,7 +22,7 @@ module.exports = function(config) {
             'src/js/intervals.*.js',
             'src/js/parsers/parsers.js',
             'src/js/parsers/parsers.*.js',
-            'test/**/*.js'
+            'test/specs/**/*.js'
         ],
 
 

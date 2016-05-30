@@ -1,7 +1,7 @@
 import Endpoint = require('./endpoint')
 import Interval = require('./intervals.classification')
 
-class Operators {
+export class Operators {
     /**
      * Gets complementary interval.
      * @static
@@ -212,15 +212,15 @@ class Operators {
 
     /**
      * Gets union of intervals
-     * @param {...*} var_args
-     * @returns {Array<Interval>}  Interval or array of intervals representing union of this method parameters.
+     * @param {...Interval} intervals
+     * @returns {Array<Interval>} intervals Interval or array of intervals representing union of this method parameters.
      */
     static union(...intervals:Array<Interval>):Array<Interval> {
         // Use of arguments
         var current;
         var k;
         var result = [];
-        var stack = Array.prototype.slice.call(intervals);
+        var stack = intervals.slice();
         var united;
 
         while (stack.length) {
@@ -244,11 +244,7 @@ class Operators {
         }
 
         return result;
-    };
-
-// FUTURE: Interval intersections
+    }
 
 // FUTURE: Interval arithmetics
 }
-
-export = Interval

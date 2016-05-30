@@ -72,7 +72,7 @@ describe('interval string parser', function() {
                     useSymbols: true
                 }).toBe('∅');
             });
-            it('should be [2,1]', function() {
+            it('should be 2..1', function() {
                 var interval = new Interval({
                     from: {
                         value: 2,

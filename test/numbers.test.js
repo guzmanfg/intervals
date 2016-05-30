@@ -30,7 +30,7 @@ describe('Numbers', function() {
             expect(Numbers.isFloat(-1)).to.be.true;
         });
         it('returns false when value is not float', function(){
-            expect(Numbers.isFloat(0)).to.be.false;
+            expect(Numbers.isFloat("0")).to.be.false;
         });
     });
     describe('isFloatString', function() {

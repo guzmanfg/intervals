@@ -217,6 +217,13 @@ class Interval {
             }
         });
     }
+
+    static Factory(...modules){
+        let i:number;
+        for(i = 0; i < modules.length; i++){
+           // Object.assing(Intervals, module[i]);
+        }
+    }
 }
 
 export = Interval

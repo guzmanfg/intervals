@@ -6,17 +6,16 @@
 (function(root, factory) {
     'use strict';
     if (typeof define === 'function' && define.amd) {
-        define(['Endpoint', 'Utils'], function(Endpoint, Utils) {
+        define(['endpoint', 'utils'], function(Endpoint, Utils) {
             return (root.Interval = factory(Endpoint, Utils));
         });
     } else if (typeof module === 'object' && module.exports) {
-        module.exports = (root.Interval = factory(require('Endpoint'), require('Utils')));
+        module.exports = (root.Interval = factory(require('./endpoint'), require('./utils')));
     } else {
         root.Interval = factory(root.Endpoint, root.Utils);
     }
 }(this, function(Endpoint, Utils) {
     'use strict';
-    var prev;
 
     /**
      * @class Interval Interval class
@@ -62,18 +61,6 @@
                 this.to = config.to;
             }
         }
-    }
-
-    /**
-     * Prevents library conflicts
-     */
-    if (this === window) {
-        prev = this.Interval
-        Interval.noConflict = function() {
-            this.Interval = prev;
-            delete Interval.noConflict; // noConflict cannot be invoked again
-            return Interval;
-        };
     }
 
     Object.defineProperty(Interval.prototype, 'diameter', {

@@ -4,6 +4,8 @@ Library to work with intervals.
 
 ## Open for extension
 
+## Compatibility
+IE9+
 
 ## TODO
 
